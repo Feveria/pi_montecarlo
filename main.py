@@ -1,10 +1,11 @@
 # Author: Artur Szcześniak
+
 import random
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-
 INTERVAL = 0
+
 
 def get_random_point():
     x, y = random.uniform(-1, 1), random.uniform(-1, 1)
@@ -18,15 +19,15 @@ def point_is_in_circle(point, radius):
         return False
 
 
-fig, ax = plt.subplots(num="Monte Carlo PI")
+fig, ax = plt.subplots(num="Monte Carlo π")
 fig.set_size_inches(9, 9)
 ax.set_facecolor((0.1, 0.1, 0.1))
 # circle = plt.Circle((0, 0), 1, fill=False, edgecolor=(0.8, 0.9, 0.8))
 # ax.add_artist(circle)
 inside_scatter = plt.scatter([], [])
 outside_scatter = plt.scatter([], [])
-in_points = []
-out_points = []
+in_points = [[0, 0]]
+out_points = [[-1, -1]]
 
 
 def add_point(frame):
@@ -35,16 +36,10 @@ def add_point(frame):
         in_points.append(point)
     else:
         out_points.append(point)
-    x_in_vect = [point[0] for point in in_points]
-    y_in_vect = [point[1] for point in in_points]
-    x_out_vect = [point[0] for point in out_points]
-    y_out_vect = [point[1] for point in out_points]
-    inside_scatter = plt.scatter(x_in_vect,
-                                 y_in_vect,
+    inside_scatter = plt.scatter(*zip(*in_points),
                                  c=[[0.9, 0.9, 0.9]],
                                  s=2)
-    outside_scatter = plt.scatter(x_out_vect,
-                                  y_out_vect,
+    outside_scatter = plt.scatter(*zip(*out_points),
                                   c=[[0.4, 0.2, 0.2]],
                                   s=2)
     try:
@@ -52,11 +47,15 @@ def add_point(frame):
     except ZeroDivisionError:
         pi = 0
     pitext = plt.text(-0.97, -0.96,
-                      "Calculated pi: {:1.5f}".format(pi),
-                      bbox={'facecolor': 'w', 'alpha': 0.99, 'pad': 5})
+                      "Calculated π: {:1.5f}".format(pi),
+                      bbox={'facecolor': 'w',
+                            'alpha': 0.99,
+                            'pad': 5})
     itertext = plt.text(-0.97, -0.88,
                         "Iterations: {}".format(frame),
-                        bbox={'facecolor': 'w', 'alpha': 0.99, 'pad': 5})
+                        bbox={'facecolor': 'w',
+                              'alpha': 0.99,
+                              'pad': 5})
     return inside_scatter, outside_scatter, itertext, pitext
 
 
